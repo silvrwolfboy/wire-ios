@@ -19,7 +19,7 @@
 
 #import "TokenizedTextView.h"
 #import "TokenTextAttachment.h"
-#import "Token.h"
+#import "Wire-Swift.h"
 
 @interface TokenizedTextView () <UIGestureRecognizerDelegate>
 @property (nonatomic, strong) UITapGestureRecognizer *tapSelectionGestureRecognizer;
@@ -126,29 +126,6 @@
     if ([self.delegate respondsToSelector:@selector(textViewDidChange:)]) {
         [self.delegate textViewDidChange:self];
     }
-}
-
-#pragma mark - Utils
-
-- (NSString *)pasteboardStringFromRange:(NSRange)range
-{
-    // enumerate range of current text, resolving person attachents with user name.
-    NSMutableString *string = [NSMutableString new];
-    for (NSUInteger i = range.location; i < NSMaxRange(range); i++) {
-        if ([self.attributedText.string characterAtIndex:i] == NSAttachmentCharacter) {
-            TokenTextAttachment *tokenAttachemnt = [self.attributedText attribute:NSAttachmentAttributeName
-                                                                          atIndex:i effectiveRange:NULL];
-            if ([tokenAttachemnt isKindOfClass:[TokenTextAttachment class]]) {
-                [string appendString:tokenAttachemnt.token.title];
-                if (i < NSMaxRange(range) - 1) {
-                    [string appendString:@", "];
-                }
-            }
-        } else {
-            [string appendString:[self.attributedText.string substringWithRange:NSMakeRange(i, 1)]];
-        }
-    }
-    return string;
 }
 
 #pragma mark - UIGestureRecognizerDelegate

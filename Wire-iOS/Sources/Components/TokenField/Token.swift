@@ -17,20 +17,19 @@
 // 
 
 
-@import UIKit;
+final class Token: NSObject {
+    
+    let representedObject: Any
+    let title: String
+    // if title render is longer than this length, it is trimmed with "..."
+    var maxTitleWidth: CGFloat = 0
 
+    init(title: String, representedObject: Any) {
+        self.title = title
+        self.representedObject = representedObject
 
-NS_ASSUME_NONNULL_BEGIN
-@interface Token : NSObject
+        super.init()
 
-- (instancetype)initWithTitle:(nullable NSString *)title representedObject:(id)representedObject;
-
-@property (strong, nonatomic) id representedObject;
-
-@property (copy, nonatomic) NSString *title;
-
-// if title render is longer than this length, it is trimmed with "..."
-@property (assign, nonatomic) CGFloat maxTitleWidth;
-
-@end
-NS_ASSUME_NONNULL_END
+        maxTitleWidth = CGFloat.greatestFiniteMagnitude
+    }
+}
