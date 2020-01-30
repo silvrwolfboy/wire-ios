@@ -270,16 +270,4 @@
     return attributedString.size;
 }
 
-#pragma mark - Description
-
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"<%@: %p, name %@>", [self class], self, self.token.title, nil];
-}
-
-- (UIImage *)debugQuickLookObject
-{
-    return self.image;
-}
-
 @end
