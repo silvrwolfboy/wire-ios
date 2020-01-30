@@ -47,8 +47,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refreshImage;
 
 ///TODO: private
-- (UIColor *)backgroundColor;
-- (NSDictionary *)titleAttributes;
 
 - (NSString *)shortenedTextForText:(NSString *)text
                     withAttributes:(NSDictionary *)attributes

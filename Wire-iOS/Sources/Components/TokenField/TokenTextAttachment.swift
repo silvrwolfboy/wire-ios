@@ -21,9 +21,33 @@ import Foundation
 extension TokenTextAttachment {
     
     @objc
+    var titleColor: UIColor? {
+        if isSelected {
+            return tokenField?.tokenSelectedTitleColor
+        } else {
+            return tokenField?.tokenTitleColor
+        }
+    }
+    
+    var titleAttributes: [NSAttributedString.Key : Any?] {
+        return [
+            NSAttributedString.Key.font: tokenField?.tokenTitleFont,
+            NSAttributedString.Key.foregroundColor: titleColor
+        ]
+    }
+    
+    var backgroundColor: UIColor? {
+        if isSelected {
+            return tokenField?.tokenSelectedBackgroundColor
+        } else {
+            return tokenField?.tokenBackgroundColor
+        }
+    }
+    @objc
     func imageForCurrentToken() -> UIImage? {
         guard let tokenField = tokenField,
-            let lineHeight = tokenField.font?.lineHeight else {
+            let lineHeight = tokenField.font?.lineHeight,
+            let capHeight = tokenField.font?.capHeight else {
             return nil
         }
         
@@ -34,15 +58,15 @@ extension TokenTextAttachment {
         if tokenMaxWidth < imageHeight {
             tokenMaxWidth = imageHeight
         }
-        let shortTitle = shortenedText(forText: title, withAttributes: titleAttributes(), toFitMaxWidth: tokenMaxWidth)
-        let attributedName = NSAttributedString(string: shortTitle, attributes: titleAttributes())
+        let shortTitle = shortenedText(forText: title, withAttributes: titleAttributes, toFitMaxWidth: tokenMaxWidth)
+        let attributedName = NSAttributedString(string: shortTitle, attributes: titleAttributes)
         
         let size = attributedName.size()
         
         var imageSize = size
         imageSize.height = imageHeight
         
-        let delta = ceil((tokenField.font?.capHeight - imageHeight) * 0.5)
+        let delta = ceil((capHeight - imageHeight) * 0.5)
         bounds = CGRect(x: 0, y: delta, width: imageSize.width, height: imageHeight)
         
         UIGraphicsBeginImageContextWithOptions(bounds.size, _: false, _: 0.0)

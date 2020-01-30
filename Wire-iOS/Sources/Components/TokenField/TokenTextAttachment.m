@@ -118,25 +118,8 @@
     self.image = [self imageForCurrentToken];
 }
 
+
 #pragma mark - String formatting
-
-- (UIColor *)titleColor
-{
-    if (self.isSelected) {
-        return self.tokenField.tokenSelectedTitleColor;
-    } else {
-        return self.tokenField.tokenTitleColor;
-    }
-}
-
-- (UIColor *)backgroundColor
-{
-    if (self.isSelected) {
-        return self.tokenField.tokenSelectedBackgroundColor;
-    } else {
-        return self.tokenField.tokenBackgroundColor;
-    }
-}
 
 - (UIColor *)borderColor
 {
