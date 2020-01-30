@@ -118,51 +118,6 @@
     self.image = [self imageForCurrentToken];
 }
 
-- (UIImage *)imageForCurrentToken
-{
-    const CGFloat imageHeight = ceilf(self.tokenField.font.lineHeight);
-    NSString *title = [self.token.title stringByApplyingTextTransform:self.tokenField.tokenTextTransform];
-    CGFloat tokenMaxWidth = ceilf(self.token.maxTitleWidth - self.tokenField.tokenOffset - imageHeight);
-    // Width cannot be smaller than height
-    if (tokenMaxWidth < imageHeight) {
-        tokenMaxWidth = imageHeight;
-    }
-    NSString *shortTitle = [self shortenedTextForText:title
-                                       withAttributes:self.titleAttributes
-                                        toFitMaxWidth:tokenMaxWidth];
-    NSAttributedString *attributedName = [[NSAttributedString alloc] initWithString:shortTitle attributes:self.titleAttributes];
-    
-    CGSize size = attributedName.size;
-    
-    CGSize imageSize = size;
-    imageSize.height = imageHeight;
-    
-    const CGFloat delta = ceilf((self.tokenField.font.capHeight - imageHeight) * 0.5f);
-    self.bounds = CGRectMake(0, delta, imageSize.width, imageHeight);
-    
-    UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, 0.0);
-
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CFRetain(context);
-
-    CGContextSaveGState(context);
-
-    CGContextSetFillColorWithColor(context, self.backgroundColor.CGColor);
-    CGContextSetStrokeColorWithColor(context, self.borderColor.CGColor);
-    CGContextSetLineJoin(context, kCGLineJoinRound);
-    CGContextSetLineWidth(context, 1);
-    
-    [attributedName drawAtPoint:CGPointMake(0, -delta + self.tokenField.tokenTitleVerticalAdjustment)];
-    
-    UIImage *i = UIGraphicsGetImageFromCurrentImageContext();
-    
-    CGContextRestoreGState(context);
-    UIGraphicsEndImageContext();
-    CFRelease(context);
-    
-    return i;
-}
-
 #pragma mark - String formatting
 
 - (UIColor *)titleColor

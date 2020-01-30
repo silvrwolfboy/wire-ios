@@ -19,6 +19,58 @@
 import Foundation
 
 extension TokenTextAttachment {
+    
+    @objc
+    func imageForCurrentToken() -> UIImage? {
+        guard let tokenField = tokenField,
+            let lineHeight = tokenField.font?.lineHeight else {
+            return nil
+        }
+        
+        let imageHeight = ceil(lineHeight)
+        let title = token.title.applying(transform: tokenField.tokenTextTransform)
+        var tokenMaxWidth = ceil(token.maxTitleWidth - tokenField.tokenOffset - imageHeight)
+        // Width cannot be smaller than height
+        if tokenMaxWidth < imageHeight {
+            tokenMaxWidth = imageHeight
+        }
+        let shortTitle = shortenedText(forText: title, withAttributes: titleAttributes(), toFitMaxWidth: tokenMaxWidth)
+        let attributedName = NSAttributedString(string: shortTitle, attributes: titleAttributes())
+        
+        let size = attributedName.size()
+        
+        var imageSize = size
+        imageSize.height = imageHeight
+        
+        let delta = ceil((tokenField.font?.capHeight - imageHeight) * 0.5)
+        bounds = CGRect(x: 0, y: delta, width: imageSize.width, height: imageHeight)
+        
+        UIGraphicsBeginImageContextWithOptions(bounds.size, _: false, _: 0.0)
+        
+        let context = UIGraphicsGetCurrentContext()
+        //TODO: CFRetain(context)
+        
+        context?.saveGState()
+        
+        context?.setFillColor(backgroundColor?.cgColor)
+        if let CGColor = borderColor?.cgColor {
+            context?.setStrokeColor(CGColor)
+        }
+        if let context = context {
+            context.setLineJoin(.round)
+        }
+        context?.setLineWidth(1)
+        
+        attributedName.draw(at: CGPoint(x: 0, y: -delta + tokenField.tokenTitleVerticalAdjustment))
+        
+        let i = UIGraphicsGetImageFromCurrentImageContext()
+        
+        context?.restoreGState()
+        UIGraphicsEndImageContext()
+        
+        return i
+    }
+    
     // MARK: - Description
     override open var description: String {
         return String(format: "<\(TokenTextAttachment.self): \(self), name \(token.title)>")
